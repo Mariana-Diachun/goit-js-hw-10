@@ -1,6 +1,8 @@
 import './css/styles.css';
-import renderCountriesList from './renderCountriesList.js';
-import { fetchCountries } from './fetchCountries.js';
+import _debounce, { debounce } from 'debounce';
+import Notiflix from 'notiflix';
+// import renderCountriesList from './renderCountriesList.js';
+// import { fetchCountries } from './fetchCountries.js';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -10,36 +12,44 @@ const refs = {
   countryListEl: document.querySelector('.country-list'),
 };
 
-refs.inputEl.addEventListener('input', onInputClick);
+// console.log(refs.inputEl);
+
+refs.inputEl.addEventListener('input', debounce(onInputClick, 300));
 
 function onInputClick(e) {
   const searchQuery = refs.inputEl.value;
-  fetchCountries(searchQuery)
-    .then(renderCountriesList)
-    .catch(error => console.log(error));
+
+  fetchCountries(searchQuery).then(renderCountriesList).catch(onFetchError);
+  // .finally(() => refs.inputEl.value.reset());
 }
 
-// function fetchCountries(name) {
-//     return fetch('https://restcountries.com/v3.1/name/${name}')
-//         .then((response) => {
-//             if (!response.ok) {
-//             throw new Error(response.status);
-//             }
-//         return response.json();
-//     })
-// };
+const BASE_URL = 'https://restcountries.com/v3.1/name';
 
-// function renderCountriesList(){
-//     const markup = countries.map((country) => {
-//         return `
-//         <li>
-//             <img src="${country.flags.svg} "/>
-//             <p>${country.name.official}</p>
-//             <p><b>Capital</b>: ${country.capital}</p>
-//             <p><b>Population</b>: ${country.population}</p>
-//             <p><b>Languages</b>: ${country.languages}</p>
-//         </li>
-//         `
-//     }).join("");
-//     refs.countryListEl.innerHTML = markup;
-// }
+function fetchCountries(name) {
+  return fetch(`${BASE_URL}/${name}`).then(response => {
+    return response.json();
+  });
+}
+
+function renderCountriesList(countries) {
+  const markup = countries
+    .map(({ flags, name, capital, population, languages }) => {
+      return `  
+        <div class="country-card">
+            <img src="${flags.svg}" width="100"/> 
+            <p class="country__title">${name.official}</p>
+        </div>
+            <p class="country-info"><b>Capital</b>: ${capital}</p>
+            <p class="country-info"><b>Population</b>: ${population}</p>
+            <p class="country-info"><b>Languages</b>: ${Object.values(languages)
+              .map(language => `${language}`)
+              .join(', ')}</p>
+        `;
+    })
+    .join('');
+  refs.countryListEl.innerHTML = markup;
+}
+
+function onFetchError() {
+  Notiflix.Notify.failure('Oops, there is no country with that name');
+}

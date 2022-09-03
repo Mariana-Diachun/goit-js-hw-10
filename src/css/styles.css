@@ -20,5 +20,25 @@ body {
 }
 
 li {
-text-decoration: none;
+  text-decoration: none;
+}
+img {
+  display: block;
+  margin-right: 20px;
+  max-width: 100%;
+}
+
+.country-card {
+  display: flex;
+  justify-content: flex-start;
+}
+.country__title {
+  font-size: 50px;
+  font-weight: 700;
+  line-height: 1;
+}
+.country-info {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
 }
