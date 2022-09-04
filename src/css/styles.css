@@ -22,6 +22,7 @@ body {
 li {
   text-decoration: none;
 }
+
 img {
   display: block;
   margin-right: 20px;
@@ -40,5 +41,15 @@ img {
 .country-info {
   font-size: 30px;
   font-weight: 500;
+  line-height: 1;
+}
+.country-item {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.country-name {
+  font-size: 20px;
+  font-weight: 700;
   line-height: 1;
 }
