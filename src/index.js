@@ -1,5 +1,5 @@
 import './css/styles.css';
-import _debounce, { debounce } from 'debounce';
+import _debounce from 'debounce';
 import { fetchCountries } from './fetchCountries.js';
 import { refs } from './refs.js';
 import { renderCountriesList } from './renderCountriesList.js';
@@ -14,7 +14,7 @@ refs.inputEl.addEventListener('input', _debounce(onInputClick, DEBOUNCE_DELAY));
 function onInputClick(evt) {
   evt.preventDefault();
   const searchQuery = evt.target.value.trim();
-  if (searchQuery === '') {
+  if (!searchQuery) {
     refs.countryListEl.innerHTML = '';
     refs.countryInfoContainer.innerHTML = '';
   }
